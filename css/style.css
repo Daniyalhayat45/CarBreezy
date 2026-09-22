@@ -2470,42 +2470,56 @@ textarea.form-control {
    LIVE TICKER
    ========================================================= */
 
+/* =========================================================
+   LIVE TICKER (bottom bar)
+   ========================================================= */
+
+body {
+    padding-bottom: 48px; /* space so ticker doesn't cover content */
+}
+
 .live-ticker {
     position: fixed;
-
+    left: 0;
     right: 0;
     bottom: 0;
-    left: 0;
 
     height: 46px;
 
     display: flex;
+    align-items: stretch;
 
-    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    background: linear-gradient(
+        90deg,
+        var(--dark) 0%,
+        var(--dark-2) 100%
+    );
 
-    background: var(--dark);
+    box-shadow: 0 -8px 25px rgba(7, 18, 13, 0.20);
 
     z-index: 2000;
 }
 
+/* Left "LIVE" badge */
 .ticker-label {
     flex: 0 0 auto;
-
-    min-width: 85px;
 
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
 
-    background: var(--primary);
+    min-width: 88px;
+    padding: 0 16px;
 
+    background: var(--primary);
     color: var(--white);
 
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 800;
+    letter-spacing: 1.5px;
 
     z-index: 2;
 }
@@ -2515,42 +2529,33 @@ textarea.form-control {
 }
 
 @keyframes tickerPulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.45;
-    }
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
 }
 
+/* Scrolling area */
 .ticker-track {
     flex: 1;
-
+    overflow: hidden;
     display: flex;
     align-items: center;
-
-    overflow: hidden;
 }
 
 .ticker-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 26px;
+
+    padding-left: 26px;
+
     width: max-content;
 
-    display: flex;
-    align-items: center;
+    color: rgba(255, 255, 255, 0.65);
 
-    gap: 22px;
-
-    padding-left: 22px;
-
-    color: rgba(255, 255, 255, 0.55);
-
-    font-size: 0.68rem;
-
+    font-size: 0.72rem;
     white-space: nowrap;
 
-    animation: tickerMove 38s linear infinite;
+    animation: tickerMove 45s linear infinite;
 }
 
 .ticker-content:hover {
@@ -2560,29 +2565,52 @@ textarea.form-control {
 .ticker-content span {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 .ticker-content i {
     color: var(--primary-light);
+    font-size: 0.78rem;
 }
 
 .ticker-content strong {
     color: var(--white);
+    font-weight: 700;
 }
 
 .ticker-separator {
-    color: rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.20);
+    font-size: 0.7rem;
 }
 
 @keyframes tickerMove {
-    from {
-        transform: translateX(0);
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
+    body { padding-bottom: 44px; }
+
+    .live-ticker { height: 42px; }
+
+    .ticker-label {
+        min-width: 62px;
+        padding: 0 10px;
+        font-size: 0.6rem;
     }
 
-    to {
-        transform: translateX(-50%);
+    .ticker-content {
+        gap: 18px;
+        padding-left: 18px;
+        font-size: 0.65rem;
+        animation-duration: 35s;
     }
+}
+
+@media (max-width: 480px) {
+    .ticker-label span { display: none; }
+    .ticker-label { min-width: 46px; }
 }
 
 
