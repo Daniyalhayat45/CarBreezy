@@ -471,6 +471,149 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/main.js"></script>
+
+<script>
+/* =========================================================
+   INDEX — Load featured cars from data/cars.json
+   ========================================================= */
+
+const CARS_URL = 'data/cars.json';
+let ALL_CARS = [];
+
+
+/* ---------- Helpers ---------- */
+function formatPrice(n) {
+  if (n >= 10000000) return `PKR ${(n / 10000000).toFixed(2)} Crore`;
+  if (n >= 100000)   return `PKR ${(n / 100000).toFixed(2)} Lac`;
+  return `PKR ${n.toLocaleString()}`;
+}
+
+function card(car) {
+  return `
+    <div class="col-lg-4 col-md-6 car-card-wrapper">
+      <div class="car-card">
+        <div class="car-card-image-wrapper">
+          <img src="${car.image}" alt="${car.name}" class="car-card-image">
+          <span class="car-condition ${car.condition === 'Used' ? 'used' : ''}">
+            ${car.condition}
+          </span>
+          <button class="car-card-favorite" type="button">
+            <i class="bi bi-heart"></i>
+          </button>
+        </div>
+
+        <div class="car-card-content">
+          <span class="car-card-brand">${car.brand}</span>
+          <h3 class="car-card-title">${car.name} ${car.model}</h3>
+
+          <div class="car-card-price">
+            <span>Price</span>
+            <strong>${formatPrice(car.price)}</strong>
+          </div>
+
+          <div class="car-card-specs">
+            <div class="car-card-spec"><i class="bi bi-calendar"></i><span>${car.year}</span></div>
+            <div class="car-card-spec"><i class="bi bi-fuel-pump"></i><span>${car.engine}</span></div>
+            <div class="car-card-spec"><i class="bi bi-gear"></i><span>${car.transmission}</span></div>
+          </div>
+
+          <button class="car-card-button" type="button" data-id="${car.id}">
+            View Details <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindCards(scope) {
+  scope.querySelectorAll('.car-card-button').forEach(btn => {
+    btn.onclick = () => location.href = `car-details.html?id=${btn.dataset.id}`;
+  });
+
+  scope.querySelectorAll('.car-card-favorite').forEach(btn => {
+    btn.onclick = e => {
+      e.stopPropagation();
+      btn.classList.toggle('active');
+      btn.querySelector('i').className =
+        btn.classList.contains('active') ? 'bi bi-heart-fill' : 'bi bi-heart';
+    };
+  });
+}
+
+function renderInto(el, list) {
+  if (!list.length) {
+    el.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <p style="color:var(--text-muted);">No cars available.</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML = list.map(card).join('');
+  bindCards(el);
+}
+
+
+/* ---------- Load and distribute ---------- */
+async function loadFeatured() {
+  const newWrap  = document.getElementById('featuredNewCars');
+  const usedWrap = document.getElementById('featuredUsedCars');
+
+  try {
+    const res = await fetch(CARS_URL);
+    if (!res.ok) throw new Error(res.status);
+    ALL_CARS = await res.json();
+
+    // 3 newest "New" cars
+    const newCars = ALL_CARS
+      .filter(c => c.condition === 'New')
+      .sort((a, b) => b.year - a.year || b.price - a.price)
+      .slice(0, 3);
+
+    // 3 newest "Used" cars
+    const usedCars = ALL_CARS
+      .filter(c => c.condition === 'Used')
+      .sort((a, b) => b.year - a.year || b.price - a.price)
+      .slice(0, 3);
+
+    renderInto(newWrap, newCars);
+    renderInto(usedWrap, usedCars);
+
+    // Update hero counters
+    document.getElementById('totalCars').textContent   = ALL_CARS.length + '+';
+    document.getElementById('totalBrands').textContent =
+      new Set(ALL_CARS.map(c => c.brand)).size + '+';
+
+  } catch (err) {
+    console.error('Could not load cars:', err);
+    const msg = `
+      <div class="col-12 text-center py-5">
+        <p style="color:var(--text-muted);font-size:0.85rem;">
+          Could not load cars. Check that <code>data/cars.json</code> exists.
+        </p>
+      </div>`;
+    newWrap.innerHTML = msg;
+    usedWrap.innerHTML = msg;
+  }
+}
+
+
+/* ---------- Hero quick search → shop.html ---------- */
+document.getElementById('homeSearchBtn').addEventListener('click', () => {
+  const brand = document.getElementById('homeBrand').value.trim();
+  const cat   = document.getElementById('homeCategory').value.trim();
+  const cond  = document.getElementById('homeCondition').value;
+
+  const params = new URLSearchParams();
+  if (brand) params.set('brand', brand);
+  if (cat)   params.set('category', cat);
+  if (cond)  params.set('condition', cond);
+
+  location.href = 'shop.html' + (params.toString() ? '?' + params : '');
+});
+
+
+/* ---------- Go ---------- */
+loadFeatured();
+</script>
 </body>
 </html>
