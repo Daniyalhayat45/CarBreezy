@@ -3098,3 +3098,39 @@ textarea.form-control {
         scroll-behavior: auto !important;
     }
 }
+.btn-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    background: var(--white);
+    color: var(--text-light);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.btn-reset:hover {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(22, 163, 74, 0.20);
+}
+
+.btn-reset:active {
+    transform: translateY(0);
+}
+
+.btn-reset i {
+    font-size: 0.8rem;
+}

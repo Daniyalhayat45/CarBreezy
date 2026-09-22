@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Car Details | CarBreezy</title>
+
+    <link rel="icon" href="images/logo/favicon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ===== Details page extras ===== */
+        .detail-hero {
+            padding: 130px 0 40px;
+            background: linear-gradient(135deg, var(--light), var(--white));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb-line {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 14px;
+
+            color: var(--text-muted);
+            font-size: 0.76rem;
+        }
+
+        .breadcrumb-line a {
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+
+        .breadcrumb-line a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-line i {
+            font-size: 0.65rem;
+            opacity: 0.6;
+        }
+
+        .detail-hero h1 {
+            margin: 0 0 6px;
+            font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+            letter-spacing: -1px;
+        }
+
+        .detail-hero .model {
+            color: var(--text-light);
+            font-size: 0.92rem;
+        }
+
+        /* Image */
+        .detail-image-wrapper {
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: var(--radius-lg);
+            border: 1.5px solid rgba(22, 163, 74, 0.28);
+
+            background: var(--light-2);
+
+            box-shadow: var(--shadow-md);
+        }
+
+        .detail-image {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .detail-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+
+            padding: 6px 12px;
+
+            border-radius: 8px;
+
+            background: var(--primary);
+            color: var(--white);
+
+            font-size: 0.66rem;
+            font-weight: 800;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-badge.used { background: #334155; }
+
+        /* Sidebar / booking card */
+        .detail-card {
+            padding: 24px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.28);
+            border-radius: var(--radius-lg);
+
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .detail-price {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-price span {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-price strong {
+            margin-left: auto;
+
+            color: var(--primary-dark);
+            font-family: "Montserrat", sans-serif;
+            font-size: 1.55rem;
+        }
+
+        .detail-quick {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .detail-quick > div {
+            padding: 11px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--light);
+        }
+
+        .detail-quick i {
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+        }
+
+        .detail-quick small {
+            display: block;
+            margin: 4px 0 2px;
+
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .detail-quick strong {
+            color: var(--text);
+            font-size: 0.76rem;
+        }
+
+        /* Spec grid */
+        .spec-card {
+            padding: 20px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.18);
+            border-radius: var(--radius-md);
+
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .spec-card h3 {
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .spec-item {
+            padding: 12px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--light);
+        }
+
+        .spec-item i {
+            color: var(--primary-dark);
+            font-size: 0.85rem;
+        }
+
+        .spec-item span {
+            display: block;
+            margin: 6px 0 2px;
+
+            color: var(--text-muted);
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .spec-item strong {
+            color: var(--text);
+            font-size: 0.76rem;
+        }
+
+        /* Description */
+        .desc-card {
+            padding: 22px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.18);
+            border-radius: var(--radius-md);
+
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .desc-card h3 {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .desc-card p {
+            margin: 0;
+            font-size: 0.84rem;
+            line-height: 1.75;
+        }
+
+        /* Related */
+        .related-section { background: var(--light); }
+
+        /* Loader */
+        .detail-loader {
+            padding: 120px 20px;
+            text-align: center;
+        }
+
+        /* Not found */
+        .not-found {
+            padding: 120px 20px;
+            text-align: center;
+        }
+
+        .not-found i {
+            display: block;
+            margin-bottom: 14px;
+
+            color: var(--text-muted);
+            font-size: 2.6rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .detail-hero { padding: 110px 0 30px; }
+            .detail-image { height: 380px; }
+        }
+
+        @media (max-width: 767.98px) {
+            .detail-image { height: 260px; }
+            .spec-grid { grid-template-columns: 1fr 1fr; }
+            .detail-card { padding: 18px; }
+            .detail-price strong { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 480px) {
+            .spec-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+      <div class="brand-name">Car<span>Breezy</span></div>
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbarMenu">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbarMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="new-cars.html">New Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="used-cars.html">Used Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="inspection.html">Inspection</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item ms-lg-2">
+          <div class="visitor-counter d-flex align-items-center gap-2">
+            <i class="bi bi-eye"></i>
+            <div>
+              <small>Visitors</small>
+              <strong id="visitorCount">1,024</strong>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- CONTENT MOUNT POINT -->
+<main id="detailRoot">
+  <div class="detail-loader">
+    <div class="spinner-border text-success"></div>
+    <p class="mt-3" style="color:var(--text-muted);">Loading car...</p>
+  </div>
+</main>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+
+      <div class="col-lg-4">
+        <a href="index.html" class="footer-brand">
+          <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+          <span>Car<span>Breezy</span></span>
+        </a>
+
+        <p class="footer-description">
+          A simple automotive marketplace for discovering
+          new and used vehicles in Pakistan.
+        </p>
+
+        <div class="footer-socials">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Explore</h5>
+        <ul class="footer-links">
+          <li><a href="new-cars.html">New Cars</a></li>
+          <li><a href="used-cars.html">Used Cars</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="offers.html">Offers</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="inspection.html">Inspection</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4">
+        <h5>Contact Information</h5>
+        <ul class="footer-contact">
+          <li><i class="bi bi-geo-alt"></i> Karachi, Pakistan</li>
+          <li><i class="bi bi-telephone"></i> +92 300 1234567</li>
+          <li><i class="bi bi-envelope"></i> info@carbreezy.com</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      <p>© 2026 CarBreezy. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* =========================================================
+   CAR DETAILS
+   ========================================================= */
+
+const CARS_URL = 'data/cars.json';
+const root = document.getElementById('detailRoot');
+
+
+/* ---------- Helpers ---------- */
+function formatPrice(n) {
+  if (n >= 10000000) return `PKR ${(n / 10000000).toFixed(2)} Crore`;
+  if (n >= 100000)   return `PKR ${(n / 100000).toFixed(2)} Lac`;
+  return `PKR ${n.toLocaleString()}`;
+}
+
+function notFound(msg = 'Car not found') {
+  root.innerHTML = `
+    <div class="not-found">
+      <i class="bi bi-exclamation-circle"></i>
+      <h3>${msg}</h3>
+      <p style="color:var(--text-muted);">
+        The vehicle you're looking for isn't available.
+      </p>
+      <a href="shop.html" class="btn btn-primary mt-3">
+        Back to Shop <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>`;
+}
+
+
+/* ---------- Card for related cars ---------- */
+function smallCard(car) {
+  return `
+    <div class="col-lg-4 col-md-6 car-card-wrapper">
+      <div class="car-card">
+        <div class="car-card-image-wrapper">
+          <img src="${car.image}" alt="${car.name}" class="car-card-image">
+          <span class="car-condition ${car.condition === 'Used' ? 'used' : ''}">
+            ${car.condition}
+          </span>
+        </div>
+
+        <div class="car-card-content">
+          <span class="car-card-brand">${car.brand}</span>
+          <h3 class="car-card-title">${car.name} ${car.model}</h3>
+
+          <div class="car-card-price">
+            <span>Price</span>
+            <strong>${formatPrice(car.price)}</strong>
+          </div>
+
+          <div class="car-card-specs">
+            <div class="car-card-spec"><i class="bi bi-calendar"></i><span>${car.year}</span></div>
+            <div class="car-card-spec"><i class="bi bi-fuel-pump"></i><span>${car.engine}</span></div>
+            <div class="car-card-spec"><i class="bi bi-gear"></i><span>${car.transmission}</span></div>
+          </div>
+
+          <a href="car-details.html?id=${car.id}" class="car-card-button">
+            View Details <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>`;
+}
+
+
+/* ---------- Render full detail page ---------- */
+function renderCar(car, allCars) {
+  const title = `${car.name} ${car.model}`;
+
+  const related = allCars
+    .filter(c => c.id !== car.id && (c.brand === car.brand || c.category === car.category))
+    .slice(0, 3);
+
+  root.innerHTML = `
+    <!-- HERO -->
+    <header class="detail-hero">
+      <div class="container">
+        <div class="breadcrumb-line">
+          <a href="index.html">Home</a>
+          <i class="bi bi-chevron-right"></i>
+          <a href="shop.html">Shop</a>
+          <i class="bi bi-chevron-right"></i>
+          <a href="shop.html?brand=${encodeURIComponent(car.brand)}">${car.brand}</a>
+          <i class="bi bi-chevron-right"></i>
+          <span>${car.name}</span>
+        </div>
+
+        <h1>${title}</h1>
+        <p class="model mb-0">
+          ${car.year} · ${car.category} · ${car.location}
+        </p>
+      </div>
+    </header>
+
+
+    <!-- MAIN -->
+    <section class="section-padding">
+      <div class="container">
+        <div class="row g-4">
+
+          <!-- LEFT: image -->
+          <div class="col-lg-7">
+            <div class="detail-image-wrapper">
+              <span class="detail-badge ${car.condition === 'Used' ? 'used' : ''}">
+                ${car.condition}
+              </span>
+              <img src="${car.image}" alt="${title}" class="detail-image">
+            </div>
+
+            <!-- Description -->
+            <div class="desc-card mt-4">
+              <h3><i class="bi bi-info-circle me-2" style="color:var(--primary-dark);"></i>Overview</h3>
+              <p>${car.description || 'No description available for this vehicle.'}</p>
+            </div>
+
+            <!-- Full specs -->
+            <div class="spec-card mt-4">
+              <h3><i class="bi bi-list-check me-2" style="color:var(--primary-dark);"></i>Specifications</h3>
+              <div class="spec-grid">
+
+                <div class="spec-item">
+                  <i class="bi bi-calendar"></i>
+                  <span>Year</span>
+                  <strong>${car.year}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-car-front"></i>
+                  <span>Body Type</span>
+                  <strong>${car.category}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-fuel-pump"></i>
+                  <span>Fuel</span>
+                  <strong>${car.fuelType}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-cpu"></i>
+                  <span>Engine</span>
+                  <strong>${car.engine}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-gear"></i>
+                  <span>Transmission</span>
+                  <strong>${car.transmission}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-speedometer2"></i>
+                  <span>Mileage</span>
+                  <strong>${car.mileage}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-people"></i>
+                  <span>Seating</span>
+                  <strong>${car.seatingCapacity} Seats</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-palette"></i>
+                  <span>Color</span>
+                  <strong>${car.color}</strong>
+                </div>
+
+                <div class="spec-item">
+                  <i class="bi bi-geo-alt"></i>
+                  <span>Location</span>
+                  <strong>${car.location}</strong>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: sticky action card -->
+          <div class="col-lg-5">
+            <div class="detail-card" style="position:sticky; top:100px;">
+
+              <div class="detail-price">
+                <span>Price</span>
+                <strong>${formatPrice(car.price)}</strong>
+              </div>
+
+              <div class="detail-quick">
+                <div>
+                  <i class="bi bi-car-front"></i>
+                  <small>Body</small>
+                  <strong>${car.category}</strong>
+                </div>
+                <div>
+                  <i class="bi bi-fuel-pump"></i>
+                  <small>Fuel</small>
+                  <strong>${car.fuelType}</strong>
+                </div>
+                <div>
+                  <i class="bi bi-gear"></i>
+                  <small>Transmission</small>
+                  <strong>${car.transmission}</strong>
+                </div>
+                <div>
+                  <i class="bi bi-speedometer2"></i>
+                  <small>Mileage</small>
+                  <strong>${car.mileage}</strong>
+                </div>
+              </div>
+
+              <a href="contact.html?car=${car.id}"
+                 class="btn btn-primary w-100 mb-2">
+                <i class="bi bi-telephone me-2"></i>Contact Seller
+              </a>
+
+              <button type="button"
+                      class="btn btn-outline-secondary w-100 mb-2"
+                      id="favoriteBtn">
+                <i class="bi bi-heart me-2"></i>Save to Favorites
+              </button>
+
+              <a href="inspection.html?car=${car.id}"
+                 class="btn btn-outline-secondary w-100">
+                <i class="bi bi-shield-check me-2"></i>Book Inspection
+              </a>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- RELATED -->
+    ${related.length ? `
+      <section class="section-padding related-section">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <span class="section-label">YOU MAY ALSO LIKE</span>
+              <h2>Similar Cars</h2>
+              <p>Other vehicles from ${car.brand} or the same category.</p>
+            </div>
+            <a href="shop.html?brand=${encodeURIComponent(car.brand)}" class="section-link">
+              View All ${car.brand} <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="row g-4">
+            ${related.map(smallCard).join('')}
+          </div>
+        </div>
+      </section>
+    ` : ''}
+  `;
+
+  // Favorite toggle
+  const favBtn = document.getElementById('favoriteBtn');
+  favBtn.onclick = () => {
+    favBtn.classList.toggle('active');
+    const icon = favBtn.querySelector('i');
+    icon.className = favBtn.classList.contains('active')
+      ? 'bi bi-heart-fill me-2'
+      : 'bi bi-heart me-2';
+    favBtn.style.color  = favBtn.classList.contains('active') ? 'var(--primary-dark)' : '';
+    favBtn.style.borderColor = favBtn.classList.contains('active') ? 'var(--primary)' : '';
+  };
+}
+
+
+/* ---------- Boot ---------- */
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+
+  if (!id) return notFound('No car selected');
+
+  try {
+    const res  = await fetch(CARS_URL);
+    const cars = await res.json();
+
+    const car = cars.find(c => String(c.id) === String(id));
+    if (!car) return notFound();
+
+    document.title = `${car.name} ${car.model} | CarBreezy`;
+    renderCar(car, cars);
+
+  } catch (err) {
+    console.error(err);
+    notFound('Could not load car details');
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
