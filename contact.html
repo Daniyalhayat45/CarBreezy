@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us | CarBreezy</title>
+    <meta name="description" content="Get in touch with CarBreezy — questions, support, or car enquiries.">
+
+    <link rel="icon" href="images/logo/favicon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ===== Contact page extras ===== */
+
+        .contact-hero {
+            position: relative;
+            padding: 140px 0 60px;
+
+            background: linear-gradient(135deg, var(--light), var(--white));
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .contact-hero::after {
+            content: "";
+            position: absolute;
+
+            width: 420px;
+            height: 420px;
+
+            top: -180px;
+            right: -140px;
+
+            border-radius: 50%;
+
+            background: rgba(34, 197, 94, 0.07);
+            filter: blur(60px);
+        }
+
+        .contact-hero h1 {
+            margin: 12px 0 12px;
+
+            font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+        }
+
+        .contact-hero h1 span { color: var(--primary-dark); }
+
+        .contact-hero p {
+            max-width: 540px;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        /* Info tiles */
+        .info-tile {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+
+            padding: 22px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.18);
+            border-radius: var(--radius-md);
+
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .info-tile:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow:
+                0 12px 30px rgba(7, 18, 13, 0.10),
+                0 0 0 4px rgba(22, 163, 74, 0.08);
+        }
+
+        .info-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            background: rgba(22, 163, 74, 0.10);
+            color: var(--primary-dark);
+
+            font-size: 1.05rem;
+        }
+
+        .info-tile h5 {
+            margin: 0 0 4px;
+            font-size: 0.88rem;
+        }
+
+        .info-tile p {
+            margin: 0;
+            font-size: 0.75rem;
+            line-height: 1.55;
+        }
+
+        .info-tile a {
+            color: var(--primary-dark);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .info-tile a:hover {
+            color: var(--primary);
+        }
+
+        /* Contact form */
+        .contact-form-wrap {
+            padding: 34px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.22);
+            border-radius: var(--radius-lg);
+
+            background: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .contact-form-wrap h3 {
+            margin-bottom: 6px;
+            font-size: 1.15rem;
+        }
+
+        .contact-form-wrap > p {
+            margin-bottom: 22px;
+            font-size: 0.8rem;
+        }
+
+        /* Map placeholder */
+        .map-wrap {
+            position: relative;
+
+            height: 380px;
+            overflow: hidden;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.22);
+            border-radius: var(--radius-lg);
+
+            box-shadow: var(--shadow-sm);
+        }
+
+        .map-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            filter: grayscale(0.15);
+        }
+
+        /* Working hours */
+        .hours-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .hours-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 11px 0;
+
+            border-bottom: 1px dashed var(--border);
+
+            font-size: 0.78rem;
+        }
+
+        .hours-list li:last-child { border-bottom: 0; }
+
+        .hours-list span {
+            color: var(--text-light);
+        }
+
+        .hours-list strong {
+            color: var(--text);
+            font-size: 0.78rem;
+        }
+
+        .hours-list strong.open {
+            color: var(--primary-dark);
+        }
+
+        .hours-list strong.closed {
+            color: var(--danger);
+        }
+
+        /* FAQ accordion */
+        .faq-accordion .accordion-item {
+            margin-bottom: 10px;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.18);
+            border-radius: var(--radius-md) !important;
+
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .faq-accordion .accordion-button {
+            padding: 16px 18px;
+
+            background: var(--white);
+            color: var(--text);
+
+            font-family: "Montserrat", sans-serif;
+            font-size: 0.86rem;
+            font-weight: 700;
+
+            box-shadow: none;
+        }
+
+        .faq-accordion .accordion-button:not(.collapsed) {
+            background: rgba(22, 163, 74, 0.05);
+            color: var(--primary-dark);
+        }
+
+        .faq-accordion .accordion-button:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        .faq-accordion .accordion-body {
+            padding: 4px 18px 18px;
+            color: var(--text-light);
+            font-size: 0.78rem;
+            line-height: 1.7;
+        }
+
+        /* Success modal */
+        .success-modal {
+            border: 0;
+            border-radius: 18px;
+            background: var(--white);
+        }
+
+        .success-modal .modal-body {
+            padding: 40px 25px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 68px;
+            height: 68px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            background: rgba(22, 163, 74, 0.10);
+            color: var(--primary);
+
+            font-size: 1.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .contact-hero { padding: 120px 0 55px; }
+        }
+
+        @media (max-width: 767.98px) {
+            .contact-hero { padding: 110px 0 45px; }
+            .contact-form-wrap { padding: 22px 18px; }
+            .map-wrap { height: 300px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+      <div class="brand-name">Car<span>Breezy</span></div>
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbarMenu">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbarMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="new-cars.html">New Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="used-cars.html">Used Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="offers.html">Offers</a></li>
+        <li class="nav-item"><a class="nav-link" href="inspection.html">Inspection</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+        <li class="nav-item ms-lg-2">
+          <div class="visitor-counter d-flex align-items-center gap-2">
+            <i class="bi bi-eye"></i>
+            <div>
+              <small>Visitors</small>
+              <strong id="visitorCount">1,024</strong>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<header class="contact-hero">
+  <div class="container position-relative">
+    <span class="section-label">CONTACT US</span>
+
+    <h1>
+      We'd love to
+      <span>hear from you.</span>
+    </h1>
+
+    <p>
+      Questions about a car, an inspection, or a booking?
+      Send us a message or use any of the details below.
+    </p>
+  </div>
+</header>
+
+
+<!-- INFO TILES -->
+<section class="section-padding pt-4">
+  <div class="container">
+
+    <div class="row g-3">
+
+      <div class="col-lg-3 col-md-6">
+        <div class="info-tile">
+          <div class="info-icon"><i class="bi bi-geo-alt"></i></div>
+          <div>
+            <h5>Visit Us</h5>
+            <p>
+              123 Automotive Avenue,<br>
+              Karachi, Pakistan
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="info-tile">
+          <div class="info-icon"><i class="bi bi-telephone"></i></div>
+          <div>
+            <h5>Call Us</h5>
+            <p>
+              <a href="tel:+923001234567">+92 300 1234567</a><br>
+              <a href="tel:+922134567890">+92 21 3456 7890</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="info-tile">
+          <div class="info-icon"><i class="bi bi-envelope"></i></div>
+          <div>
+            <h5>Email Us</h5>
+            <p>
+              <a href="mailto:info@carbreezy.com">info@carbreezy.com</a><br>
+              <a href="mailto:support@carbreezy.com">support@carbreezy.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <div class="info-tile">
+          <div class="info-icon"><i class="bi bi-clock-history"></i></div>
+          <div>
+            <h5>Office Hours</h5>
+            <p>
+              Mon – Sat: 9:00 AM – 7:00 PM<br>
+              Sunday: Closed
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FORM + SIDE -->
+<section class="section-padding pt-0">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- FORM -->
+      <div class="col-lg-7">
+        <div class="contact-form-wrap">
+
+          <h3>Send Us a Message</h3>
+          <p>We usually respond within a few hours during working days.</p>
+
+          <form id="contactForm" novalidate>
+
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label class="form-label" for="ctName">Full Name</label>
+                <input type="text" id="ctName" class="form-control"
+                       placeholder="Your name" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="ctEmail">Email Address</label>
+                <input type="email" id="ctEmail" class="form-control"
+                       placeholder="you@example.com" required>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="ctPhone">Phone (optional)</label>
+                <input type="tel" id="ctPhone" class="form-control"
+                       placeholder="+92 300 1234567">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label" for="ctSubject">Subject</label>
+                <select id="ctSubject" class="form-select" required>
+                  <option value="">Choose a topic</option>
+                  <option>Car Enquiry</option>
+                  <option>Inspection Booking</option>
+                  <option>Financing Question</option>
+                  <option>Report an Issue</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label" for="ctMessage">Message</label>
+                <textarea id="ctMessage" class="form-control"
+                          placeholder="Tell us how we can help..."
+                          required></textarea>
+              </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-4">
+              <i class="bi bi-send me-2"></i>
+              Send Message
+            </button>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- SIDE -->
+      <div class="col-lg-5">
+
+        <!-- MAP -->
+        <div class="map-wrap mb-4">
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=67.00%2C24.83%2C67.10%2C24.92&layer=mapnik&marker=24.87%2C67.05"
+            loading="lazy"
+            title="CarBreezy location">
+          </iframe>
+        </div>
+
+        <!-- WORKING HOURS -->
+        <div class="contact-form-wrap">
+
+          <h3 class="mb-3">
+            <i class="bi bi-clock me-2" style="color:var(--primary-dark);"></i>
+            Working Hours
+          </h3>
+
+          <ul class="hours-list">
+            <li><span>Monday</span>    <strong class="open">9:00 – 19:00</strong></li>
+            <li><span>Tuesday</span>   <strong class="open">9:00 – 19:00</strong></li>
+            <li><span>Wednesday</span> <strong class="open">9:00 – 19:00</strong></li>
+            <li><span>Thursday</span>  <strong class="open">9:00 – 19:00</strong></li>
+            <li><span>Friday</span>    <strong class="open">9:00 – 19:00</strong></li>
+            <li><span>Saturday</span>  <strong class="open">10:00 – 17:00</strong></li>
+            <li><span>Sunday</span>    <strong class="closed">Closed</strong></li>
+          </ul>
+
+          <div class="contact-socials mt-4">
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+            <a href="#"><i class="bi bi-whatsapp"></i></a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FAQ -->
+<section class="section-padding section-light">
+  <div class="container">
+
+    <div class="section-heading text-center mx-auto">
+      <div>
+        <span class="section-label">FAQ</span>
+        <h2>Frequently Asked Questions</h2>
+        <p>Quick answers to the most common questions.</p>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+
+        <div class="accordion faq-accordion" id="contactFaq">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#faq1">
+                How quickly do you respond to messages?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show"
+                 data-bs-parent="#contactFaq">
+              <div class="accordion-body">
+                Most messages get a reply within 2–4 hours during working days.
+                Weekend messages are answered on the next business day.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#faq2">
+                Can I book a car inspection through this page?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse"
+                 data-bs-parent="#contactFaq">
+              <div class="accordion-body">
+                Yes — choose "Inspection Booking" as the subject, or visit our
+                dedicated <a href="inspection.html">Inspection</a> page for the full form.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#faq3">
+                Do you offer financing or installment plans?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse"
+                 data-bs-parent="#contactFaq">
+              <div class="accordion-body">
+                Yes, we partner with selected banks for financing. Choose
+                "Financing Question" in the form and we'll send you the details.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#faq4">
+                Where are you located?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse"
+                 data-bs-parent="#contactFaq">
+              <div class="accordion-body">
+                Our office is in Karachi, and inspections are available across
+                major cities including Lahore, Islamabad, and Rawalpindi.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <div>
+        <span class="section-label">READY TO BROWSE?</span>
+        <h2>Find your next car now.</h2>
+        <p>Explore hundreds of listings across all major brands.</p>
+      </div>
+      <a href="shop.html" class="btn btn-light">
+        Browse Cars <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+
+      <div class="col-lg-4">
+        <a href="index.html" class="footer-brand">
+          <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+          <span>Car<span>Breezy</span></span>
+        </a>
+
+        <p class="footer-description">
+          A simple automotive marketplace for discovering
+          new and used vehicles in Pakistan.
+        </p>
+
+        <div class="footer-socials">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Explore</h5>
+        <ul class="footer-links">
+          <li><a href="new-cars.html">New Cars</a></li>
+          <li><a href="used-cars.html">Used Cars</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="offers.html">Offers</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="inspection.html">Inspection</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4">
+        <h5>Contact Information</h5>
+        <ul class="footer-contact">
+          <li><i class="bi bi-geo-alt"></i> Karachi, Pakistan</li>
+          <li><i class="bi bi-telephone"></i> +92 300 1234567</li>
+          <li><i class="bi bi-envelope"></i> info@carbreezy.com</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      <p>© 2026 CarBreezy. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- SUCCESS MODAL -->
+<div class="modal fade" id="contactSuccess" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content success-modal">
+      <div class="modal-body">
+
+        <div class="success-icon">
+          <i class="bi bi-check-lg"></i>
+        </div>
+
+        <h4 class="mb-2">Message Sent</h4>
+        <p style="color:var(--text-light); font-size:0.82rem;">
+          Thanks, <strong id="csName">friend</strong>. We'll get back to
+          <strong id="csEmail">you</strong> soon.
+        </p>
+
+        <button type="button" class="btn btn-primary mt-2" data-bs-dismiss="modal">
+          Got it
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- LIVE TICKER -->
+<div class="live-ticker" id="liveTicker">
+  <div class="ticker-label">
+    <i class="bi bi-broadcast"></i>
+    <span>LIVE</span>
+  </div>
+
+  <div class="ticker-track">
+    <div class="ticker-content" id="tickerContent">
+      <span><i class="bi bi-calendar3"></i> <strong id="tickDate">Loading...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-clock"></i> <strong id="tickTime">--:--:--</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-geo-alt"></i> <strong id="tickLocation">Detecting...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-telephone"></i> Call us at <strong>+92 300 1234567</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-envelope"></i> Or email <strong>info@carbreezy.com</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-clock-history"></i> Open Mon–Sat, 9 AM – 7 PM</span>
+      <span class="ticker-separator">•</span>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/ticker.js"></script>
+<script src="js/visitor.js"></script>
+
+<script>
+/* =========================================================
+   CONTACT — form submit → success modal
+   ========================================================= */
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const name  = document.getElementById('ctName').value.trim();
+  const email = document.getElementById('ctEmail').value.trim();
+
+  document.getElementById('csName').textContent  = name || 'friend';
+  document.getElementById('csEmail').textContent = email || 'you';
+
+  const modal = new bootstrap.Modal(document.getElementById('contactSuccess'));
+  modal.show();
+
+  form.reset();
+});
+</script>
+
+</body>
+</html>

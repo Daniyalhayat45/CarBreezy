@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gallery | CarBreezy</title>
+    <meta name="description" content="Browse our gallery of cars, showroom photos and customer deliveries.">
+
+    <link rel="icon" href="images/logo/favicon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ===== Gallery page extras ===== */
+
+        .gallery-hero {
+            position: relative;
+            padding: 140px 0 60px;
+
+            background: linear-gradient(135deg, var(--light), var(--white));
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .gallery-hero::after {
+            content: "";
+            position: absolute;
+
+            width: 420px;
+            height: 420px;
+
+            top: -180px;
+            right: -140px;
+
+            border-radius: 50%;
+
+            background: rgba(34, 197, 94, 0.07);
+            filter: blur(60px);
+        }
+
+        .gallery-hero h1 {
+            margin: 12px 0 12px;
+
+            font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+        }
+
+        .gallery-hero h1 span { color: var(--primary-dark); }
+
+        .gallery-hero p {
+            max-width: 540px;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        /* Gallery grid (masonry-ish via varied row spans) */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px;
+            gap: 14px;
+        }
+
+        .gallery-card {
+            position: relative;
+
+            overflow: hidden;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.20);
+            border-radius: var(--radius-md);
+
+            background: var(--light-2);
+
+            cursor: pointer;
+
+            transition: var(--transition);
+        }
+
+        .gallery-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow:
+                0 12px 30px rgba(7, 18, 13, 0.10),
+                0 0 0 4px rgba(22, 163, 74, 0.08);
+        }
+
+        /* Featured sizes */
+        .gallery-card.tall   { grid-row: span 2; }
+        .gallery-card.wide   { grid-column: span 2; }
+        .gallery-card.large  { grid-column: span 2; grid-row: span 2; }
+
+        .gallery-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.06);
+        }
+
+        /* Overlay */
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            align-items: flex-end;
+
+            padding: 18px;
+
+            background: linear-gradient(
+                transparent 40%,
+                rgba(7, 17, 12, 0.82)
+            );
+
+            opacity: 0;
+
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay-content {
+            transform: translateY(8px);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-card:hover .gallery-overlay-content {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h5 {
+            margin: 0 0 3px;
+
+            color: var(--white);
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .gallery-overlay span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.66rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .gallery-overlay span i {
+            color: var(--primary-light);
+        }
+
+        /* Zoom badge */
+        .gallery-zoom {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+
+            width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--primary-dark);
+
+            font-size: 0.85rem;
+
+            opacity: 0;
+            transform: scale(0.85);
+
+            transition: var(--transition);
+        }
+
+        .gallery-card:hover .gallery-zoom {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Empty state */
+        .gallery-empty {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .gallery-empty i {
+            display: block;
+            margin-bottom: 12px;
+
+            color: var(--text-muted);
+            font-size: 2.4rem;
+        }
+
+        /* Lightbox modal */
+        .lightbox-modal .modal-content {
+            border: 0;
+            border-radius: 18px;
+            background: var(--dark);
+            overflow: hidden;
+        }
+
+        .lightbox-modal .modal-header {
+            padding: 16px 22px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .lightbox-modal .modal-title {
+            margin: 0;
+
+            color: var(--white);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .lightbox-modal .modal-body {
+            padding: 0;
+        }
+
+        .lightbox-modal .btn-close {
+            filter: invert(1) grayscale(1) brightness(2);
+            opacity: 0.7;
+        }
+
+        .lightbox-modal .btn-close:hover {
+            opacity: 1;
+        }
+
+        .lightbox-image-wrap {
+            position: relative;
+            background: #000;
+        }
+
+        .lightbox-image {
+            width: 100%;
+            max-height: 78vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 0;
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.10);
+            color: var(--white);
+
+            font-size: 1.2rem;
+
+            backdrop-filter: blur(6px);
+
+            transition: var(--transition);
+        }
+
+        .lightbox-nav:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .lightbox-nav.prev { left: 18px; }
+        .lightbox-nav.next { right: 18px; }
+
+        .lightbox-info {
+            padding: 20px 24px;
+
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+
+        .lightbox-info h5 {
+            margin-bottom: 6px;
+
+            color: var(--white);
+            font-size: 1rem;
+        }
+
+        .lightbox-counter {
+            display: inline-block;
+
+            margin-left: 8px;
+            padding: 3px 10px;
+
+            border-radius: 50px;
+
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--primary-light);
+
+            font-size: 0.66rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .gallery-hero { padding: 120px 0 55px; }
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: 180px;
+                gap: 12px;
+            }
+            .gallery-card.large { grid-column: span 2; grid-row: span 2; }
+            .gallery-card.wide  { grid-column: span 2; }
+        }
+
+        @media (max-width: 767.98px) {
+            .gallery-hero { padding: 110px 0 45px; }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: 150px;
+                gap: 10px;
+            }
+            .gallery-card.large { grid-column: span 2; grid-row: span 1; }
+            .gallery-card.wide  { grid-column: span 2; }
+            .gallery-card.tall  { grid-row: span 1; }
+            .gallery-overlay { padding: 12px; }
+            .gallery-overlay h5 { font-size: 0.75rem; }
+            .lightbox-nav { width: 40px; height: 40px; font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-auto-rows: 130px;
+            }
+            .gallery-card.wide { grid-column: span 2; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+      <div class="brand-name">Car<span>Breezy</span></div>
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbarMenu">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbarMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="new-cars.html">New Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="used-cars.html">Used Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="offers.html">Offers</a></li>
+        <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+        <li class="nav-item ms-lg-2">
+          <div class="visitor-counter d-flex align-items-center gap-2">
+            <i class="bi bi-eye"></i>
+            <div>
+              <small>Visitors</small>
+              <strong id="visitorCount">1,024</strong>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<header class="gallery-hero">
+  <div class="container position-relative">
+    <span class="section-label">GALLERY</span>
+
+    <h1>
+      A closer look at
+      <span>our collection.</span>
+    </h1>
+
+    <p>
+      Showroom shots, on-road photography, inspection moments, and
+      customer deliveries — all in one place.
+    </p>
+  </div>
+</header>
+
+
+<!-- GALLERY -->
+<section class="section-padding">
+  <div class="container">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">PHOTOS</span>
+        <h2>Explore the Gallery</h2>
+        <p>Click any photo to view it larger.</p>
+      </div>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="category-buttons" id="galleryFilters">
+      <button type="button" class="category-btn active" data-filter="all">All</button>
+      <button type="button" class="category-btn" data-filter="showroom">Showroom</button>
+      <button type="button" class="category-btn" data-filter="road">On Road</button>
+      <button type="button" class="category-btn" data-filter="inspection">Inspection</button>
+      <button type="button" class="category-btn" data-filter="delivery">Delivery</button>
+    </div>
+
+    <!-- Grid -->
+  <div class="gallery-grid" id="galleryGrid">
+
+  <div class="gallery-card large" data-cat="showroom"
+       data-title="Suzuki Alto VXL AGS"
+       data-desc="The compact Alto VXL AGS — a fuel-efficient city hatchback."
+       data-img="images/alto.jpg">
+    <img src="images/alto.jpg" alt="Suzuki Alto">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Alto VXL AGS</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Suzuki Wagon R VXL"
+       data-desc="Practical and spacious hatchback with easy maintenance."
+       data-img="images/wagon-r.jpg">
+    <img src="images/wagon-r.jpg" alt="Suzuki Wagon R">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Wagon R</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Suzuki Cultus VXL"
+       data-desc="Modern compact hatchback with a comfortable interior."
+       data-img="images/cultus.jpg">
+    <img src="images/cultus.jpg" alt="Suzuki Cultus">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Cultus</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card wide" data-cat="road"
+       data-title="Suzuki Swift GLX CVT"
+       data-desc="Sporty hatchback with responsive handling and modern styling."
+       data-img="images/swift.jpg">
+    <img src="images/swift.jpg" alt="Suzuki Swift">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Swift GLX CVT</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="delivery"
+       data-title="Suzuki Bolan"
+       data-desc="Compact van suitable for families and small businesses."
+       data-img="images/bolan.jpg">
+    <img src="images/bolan.jpg" alt="Suzuki Bolan">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Bolan</h5>
+        <span><i class="bi bi-geo-alt"></i> Delivery</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card tall" data-cat="delivery"
+       data-title="Suzuki Ravi Euro II"
+       data-desc="Compact pickup for everyday cargo and small business needs."
+       data-img="images/ravi.jpg">
+    <img src="images/ravi.jpg" alt="Suzuki Ravi">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Suzuki Ravi Euro II</h5>
+        <span><i class="bi bi-geo-alt"></i> Delivery</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Toyota Corolla Altis X 1.6"
+       data-desc="Well-known sedan with a comfortable cabin and smooth performance."
+       data-img="images/corolla.jpg">
+    <img src="images/corolla.jpg" alt="Toyota Corolla">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Corolla Altis X</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="road"
+       data-title="Toyota Yaris ATIV X 1.5"
+       data-desc="Refined sedan with modern styling and efficient performance."
+       data-img="images/yaris.jpg">
+    <img src="images/yaris.jpg" alt="Toyota Yaris">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Yaris ATIV X</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card wide" data-cat="road"
+       data-title="Toyota Camry Hybrid"
+       data-desc="Premium sedan focused on comfort and efficient hybrid performance."
+       data-img="images/camry.jpg">
+    <img src="images/camry.jpg" alt="Toyota Camry">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Camry Hybrid</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Toyota Fortuner 2.7 G"
+       data-desc="Large SUV with seven seats and strong road presence."
+       data-img="images/fortuner.jpg">
+    <img src="images/fortuner.jpg" alt="Toyota Fortuner">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Fortuner 2.7 G</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="inspection"
+       data-title="Toyota Hilux Revo G 2.8"
+       data-desc="Powerful pickup suitable for utility and long-distance travel."
+       data-img="images/hilux.jpg">
+    <img src="images/hilux.jpg" alt="Toyota Hilux">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Hilux Revo</h5>
+        <span><i class="bi bi-geo-alt"></i> Inspection</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="road"
+       data-title="Toyota Prius S"
+       data-desc="Fuel-efficient hybrid hatchback known for economical driving."
+       data-img="images/prius.jpg">
+    <img src="images/prius.jpg" alt="Toyota Prius">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Prius S</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card large" data-cat="showroom"
+       data-title="Honda Civic RS"
+       data-desc="Premium sedan with sporty styling and turbocharged performance."
+       data-img="images/civic.jpg">
+    <img src="images/civic.jpg" alt="Honda Civic">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Honda Civic RS</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Honda City 1.5 Aspire"
+       data-desc="Comfortable and efficient sedan for daily commuting."
+       data-img="images/city.jpg">
+    <img src="images/city.jpg" alt="Honda City">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Honda City Aspire</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Honda BR-V i-VTEC S"
+       data-desc="Practical seven-seat crossover for family travel."
+       data-img="images/br-v.jpg">
+    <img src="images/br-v.jpg" alt="Honda BR-V">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Honda BR-V</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="road"
+       data-title="Honda HR-V VTi-S"
+       data-desc="Stylish compact crossover with practical interior space."
+       data-img="images/hr-v.jpg">
+    <img src="images/hr-v.jpg" alt="Honda HR-V">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Honda HR-V VTi-S</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card wide" data-cat="inspection"
+       data-title="Hyundai Elantra Hybrid"
+       data-desc="Modern hybrid sedan with contemporary styling."
+       data-img="images/elantra.jpg">
+    <img src="images/elantra.jpg" alt="Hyundai Elantra">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Hyundai Elantra Hybrid</h5>
+        <span><i class="bi bi-geo-alt"></i> Inspection</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Hyundai Tucson Hybrid Smart"
+       data-desc="Modern crossover SUV with spacious cabin and hybrid powertrain."
+       data-img="images/tucson.jpg">
+    <img src="images/tucson.jpg" alt="Hyundai Tucson">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Hyundai Tucson Hybrid</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Hyundai Sonata 2.5"
+       data-desc="Premium mid-size sedan with elegant design."
+       data-img="images/sonata.jpg">
+    <img src="images/sonata.jpg" alt="Hyundai Sonata">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Hyundai Sonata 2.5</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Kia Picanto 1.0 AT"
+       data-desc="Compact city hatchback with modern styling."
+       data-img="images/picanto.jpg">
+    <img src="images/picanto.jpg" alt="Kia Picanto">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Kia Picanto 1.0 AT</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="road"
+       data-title="Kia Sportage L FWD"
+       data-desc="Spacious SUV with modern styling and comfortable seating."
+       data-img="images/sportage.jpg">
+    <img src="images/sportage.jpg" alt="Kia Sportage">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Kia Sportage L FWD</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Kia Sorento 3.5 FWD"
+       data-desc="Large seven-seat SUV designed for families."
+       data-img="images/sorento.jpg">
+    <img src="images/sorento.jpg" alt="Kia Sorento">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Kia Sorento 3.5 FWD</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card wide" data-cat="road"
+       data-title="Kia Stonic EX+"
+       data-desc="Compact crossover with distinctive styling."
+       data-img="images/stonic.jpg">
+    <img src="images/stonic.jpg" alt="Kia Stonic">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Kia Stonic EX+</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Changan Alsvin 1.5 DCT"
+       data-desc="Affordable compact sedan with modern features."
+       data-img="images/alsvin.jpg">
+    <img src="images/alsvin.jpg" alt="Changan Alsvin">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Changan Alsvin Lumiere</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Changan Oshan X7 FutureSense"
+       data-desc="Spacious seven-seat crossover with turbocharged performance."
+       data-img="images/oshan-x7.jpg">
+    <img src="images/oshan-x7.jpg" alt="Changan Oshan X7">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Changan Oshan X7</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="inspection"
+       data-title="MG HS Trophy"
+       data-desc="Stylish crossover SUV with turbocharged performance."
+       data-img="images/mg-hs.jpg">
+    <img src="images/mg-hs.jpg" alt="MG HS">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>MG HS Trophy</h5>
+        <span><i class="bi bi-geo-alt"></i> Inspection</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="road"
+       data-title="MG ZS EV"
+       data-desc="Compact electric SUV with quiet, modern driving."
+       data-img="images/mg-zs.jpg">
+    <img src="images/mg-zs.jpg" alt="MG ZS EV">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>MG ZS EV</h5>
+        <span><i class="bi bi-geo-alt"></i> On Road</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="showroom"
+       data-title="Haval H6 1.5T"
+       data-desc="Modern SUV with turbocharged engine and spacious cabin."
+       data-img="images/haval-h6.jpg">
+    <img src="images/haval-h6.jpg" alt="Haval H6">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Haval H6 1.5T</h5>
+        <span><i class="bi bi-geo-alt"></i> Showroom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="delivery"
+       data-title="Proton Saga Premium"
+       data-desc="Compact sedan with practical dimensions."
+       data-img="images/proton-saga.jpg">
+    <img src="images/proton-saga.jpg" alt="Proton Saga">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Proton Saga Premium</h5>
+        <span><i class="bi bi-geo-alt"></i> Delivery</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-card" data-cat="delivery"
+       data-title="Toyota Corolla Cross 1.8 HEV"
+       data-desc="Practical hybrid crossover with SUV-inspired design."
+       data-img="images/corolla-cross.jpg">
+    <img src="images/corolla-cross.jpg" alt="Toyota Corolla Cross">
+    <span class="gallery-zoom"><i class="bi bi-arrows-fullscreen"></i></span>
+    <div class="gallery-overlay">
+      <div class="gallery-overlay-content">
+        <h5>Toyota Corolla Cross HEV</h5>
+        <span><i class="bi bi-geo-alt"></i> Delivery</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+    <!-- Empty state -->
+    <div class="gallery-empty d-none" id="galleryEmpty">
+      <i class="bi bi-images"></i>
+      <h4>No photos in this category</h4>
+      <p>Try selecting another filter.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <div>
+        <span class="section-label">READY TO VISIT?</span>
+        <h2>Come see the cars in person.</h2>
+        <p>Our showroom is open Monday to Saturday.</p>
+      </div>
+      <a href="contact.html" class="btn btn-light">
+        Get Directions <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+
+      <div class="col-lg-4">
+        <a href="index.html" class="footer-brand">
+          <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+          <span>Car<span>Breezy</span></span>
+        </a>
+
+        <p class="footer-description">
+          A simple automotive marketplace for discovering
+          new and used vehicles in Pakistan.
+        </p>
+
+        <div class="footer-socials">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Explore</h5>
+        <ul class="footer-links">
+          <li><a href="new-cars.html">New Cars</a></li>
+          <li><a href="used-cars.html">Used Cars</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="offers.html">Offers</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="inspection.html">Inspection</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4">
+        <h5>Contact Information</h5>
+        <ul class="footer-contact">
+          <li><i class="bi bi-geo-alt"></i> Karachi, Pakistan</li>
+          <li><i class="bi bi-telephone"></i> +92 300 1234567</li>
+          <li><i class="bi bi-envelope"></i> info@carbreezy.com</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      <p>© 2026 CarBreezy. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- LIGHTBOX MODAL -->
+<div class="modal fade lightbox-modal" id="lightbox" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="lbTitle">Photo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="lightbox-image-wrap">
+          <img src="" alt="" class="lightbox-image" id="lbImage">
+
+          <button class="lightbox-nav prev" id="lbPrev">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          <button class="lightbox-nav next" id="lbNext">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="lightbox-info">
+          <h5>
+            <span id="lbCaption">Caption</span>
+            <span class="lightbox-counter" id="lbCounter">1 / 1</span>
+          </h5>
+          <p id="lbDesc" style="margin:0;">Description</p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- LIVE TICKER -->
+<div class="live-ticker" id="liveTicker">
+  <div class="ticker-label">
+    <i class="bi bi-broadcast"></i>
+    <span>LIVE</span>
+  </div>
+
+  <div class="ticker-track">
+    <div class="ticker-content" id="tickerContent">
+      <span><i class="bi bi-calendar3"></i> <strong id="tickDate">Loading...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-clock"></i> <strong id="tickTime">--:--:--</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-geo-alt"></i> <strong id="tickLocation">Detecting...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-images"></i> New photos added weekly</span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-telephone"></i> Visit us or call <strong>+92 300 1234567</strong></span>
+      <span class="ticker-separator">•</span>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/ticker.js"></script>
+<script src="js/visitor.js"></script>
+
+<script>
+/* =========================================================
+   GALLERY — filters + lightbox
+   ========================================================= */
+
+const grid       = document.getElementById('galleryGrid');
+const filterWrap = document.getElementById('galleryFilters');
+const emptyBox   = document.getElementById('galleryEmpty');
+
+let VISIBLE = [];     // currently visible cards (for lightbox navigation)
+let currentIndex = 0;
+
+const lightboxEl = document.getElementById('lightbox');
+const lbModal    = new bootstrap.Modal(lightboxEl);
+const lbImage    = document.getElementById('lbImage');
+const lbTitle    = document.getElementById('lbTitle');
+const lbCaption  = document.getElementById('lbCaption');
+const lbDesc     = document.getElementById('lbDesc');
+const lbCounter  = document.getElementById('lbCounter');
+
+
+/* ---------- Filter pills ---------- */
+filterWrap.addEventListener('click', e => {
+  const btn = e.target.closest('.category-btn');
+  if (!btn) return;
+
+  filterWrap.querySelectorAll('.category-btn')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const filter = btn.dataset.filter;
+  let visible = 0;
+
+  grid.querySelectorAll('.gallery-card').forEach(card => {
+    const show = filter === 'all' || card.dataset.cat === filter;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  emptyBox.classList.toggle('d-none', visible > 0);
+});
+
+
+/* ---------- Lightbox ---------- */
+function openLightbox(card) {
+  VISIBLE = [...grid.querySelectorAll('.gallery-card')]
+    .filter(c => c.style.display !== 'none');
+
+  currentIndex = VISIBLE.indexOf(card);
+
+  renderLightbox();
+  lbModal.show();
+}
+
+function renderLightbox() {
+  const card = VISIBLE[currentIndex];
+  if (!card) return;
+
+  lbImage.src = card.dataset.img;
+  lbImage.alt = card.dataset.title;
+
+  lbTitle.textContent   = card.dataset.title;
+  lbCaption.textContent = card.dataset.title;
+  lbDesc.textContent    = card.dataset.desc;
+
+  lbCounter.textContent = `${currentIndex + 1} / ${VISIBLE.length}`;
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + VISIBLE.length) % VISIBLE.length;
+  renderLightbox();
+}
+
+function nextImage() {
+  currentIndex = (currentIndex + 1) % VISIBLE.length;
+  renderLightbox();
+}
+
+
+/* Bind click on each gallery card */
+grid.querySelectorAll('.gallery-card').forEach(card => {
+  card.addEventListener('click', () => openLightbox(card));
+});
+
+
+/* Nav buttons */
+document.getElementById('lbPrev').addEventListener('click', prevImage);
+document.getElementById('lbNext').addEventListener('click', nextImage);
+
+
+/* Keyboard arrows */
+document.addEventListener('keydown', e => {
+  if (!lightboxEl.classList.contains('show')) return;
+  if (e.key === 'ArrowLeft')  prevImage();
+  if (e.key === 'ArrowRight') nextImage();
+  if (e.key === 'Escape')     lbModal.hide();
+});
+</script>
+
+</body>
+</html>

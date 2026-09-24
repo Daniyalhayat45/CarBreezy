@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Offers & Deals | CarBreezy</title>
+    <meta name="description" content="Current offers and discounts on new and used cars at CarBreezy.">
+
+    <link rel="icon" href="images/logo/favicon.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ===== Offers page extras ===== */
+
+        .offers-hero {
+            position: relative;
+            padding: 140px 0 60px;
+
+            background: linear-gradient(135deg, var(--light), var(--white));
+            border-bottom: 1px solid var(--border);
+
+            overflow: hidden;
+        }
+
+        .offers-hero::after {
+            content: "";
+            position: absolute;
+
+            width: 420px;
+            height: 420px;
+
+            top: -180px;
+            right: -140px;
+
+            border-radius: 50%;
+
+            background: rgba(34, 197, 94, 0.07);
+            filter: blur(60px);
+        }
+
+        .offers-hero h1 {
+            margin: 12px 0 14px;
+
+            font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+        }
+
+        .offers-hero h1 span { color: var(--primary-dark); }
+
+        .offers-hero p {
+            max-width: 540px;
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        /* Featured deal banner */
+        .featured-deal {
+            position: relative;
+
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+
+            gap: 0;
+
+            margin-top: 40px;
+
+            overflow: hidden;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.28);
+            border-radius: var(--radius-lg);
+
+            background: linear-gradient(135deg, var(--dark), var(--dark-2));
+            color: var(--white);
+
+            box-shadow: var(--shadow-lg);
+        }
+
+        .featured-deal-image {
+            position: relative;
+            min-height: 340px;
+            overflow: hidden;
+        }
+
+        .featured-deal-image img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            display: block;
+        }
+
+        .featured-deal-content {
+            padding: 40px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-deal-content .section-label {
+            color: var(--primary-light);
+        }
+
+        .featured-deal-content h2 {
+            margin: 8px 0 12px;
+            color: var(--white);
+            font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+
+        .featured-deal-content p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.84rem;
+            margin-bottom: 18px;
+        }
+
+        .featured-deal-prices {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        .featured-deal-old {
+            color: rgba(255, 255, 255, 0.42);
+            font-size: 0.86rem;
+            text-decoration: line-through;
+        }
+
+        .featured-deal-new {
+            color: var(--white);
+            font-family: "Montserrat", sans-serif;
+            font-size: 1.7rem;
+            font-weight: 800;
+        }
+
+        .featured-deal-save {
+            display: inline-block;
+
+            padding: 4px 10px;
+
+            border-radius: 50px;
+
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--primary-light);
+
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* Countdown */
+        .countdown {
+            display: flex;
+            gap: 10px;
+
+            margin-bottom: 22px;
+        }
+
+        .countdown > div {
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            text-align: center;
+
+            min-width: 62px;
+        }
+
+        .countdown strong {
+            display: block;
+
+            color: var(--white);
+            font-family: "Montserrat", sans-serif;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .countdown span {
+            display: block;
+            margin-top: 4px;
+
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.58rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Offer cards */
+        .offer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .offer-tile {
+            display: flex;
+            flex-direction: column;
+
+            overflow: hidden;
+
+            border: 1.5px solid rgba(22, 163, 74, 0.22);
+            border-radius: var(--radius-md);
+
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+
+            transition: var(--transition);
+        }
+
+        .offer-tile:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow:
+                0 12px 30px rgba(7, 18, 13, 0.10),
+                0 0 0 4px rgba(22, 163, 74, 0.08);
+        }
+
+        .offer-tile-image {
+            position: relative;
+            height: 190px;
+            overflow: hidden;
+            background: var(--light-2);
+        }
+
+        .offer-tile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            transition: transform 0.5s ease;
+        }
+
+        .offer-tile:hover .offer-tile-image img {
+            transform: scale(1.05);
+        }
+
+        .offer-tile-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+
+            padding: 5px 10px;
+
+            border-radius: 7px;
+
+            background: var(--primary);
+            color: var(--white);
+
+            font-size: 0.63rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .offer-tile-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+
+            padding: 5px 10px;
+
+            border-radius: 7px;
+
+            background: rgba(7, 17, 12, 0.85);
+            color: var(--white);
+
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            backdrop-filter: blur(6px);
+        }
+
+        .offer-tile-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+
+            padding: 20px;
+        }
+
+        .offer-tile-content small {
+            color: var(--primary-dark);
+            font-size: 0.63rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .offer-tile-content h4 {
+            margin: 6px 0 8px;
+            font-size: 1rem;
+            line-height: 1.35;
+        }
+
+        .offer-tile-content p {
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .offer-tile-prices {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+
+            padding-top: 14px;
+            margin-top: auto;
+            margin-bottom: 14px;
+
+            border-top: 1px solid var(--border);
+        }
+
+        .offer-tile-old {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            text-decoration: line-through;
+        }
+
+        .offer-tile-new {
+            color: var(--primary-dark);
+            font-family: "Montserrat", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .offers-hero { padding: 120px 0 55px; }
+            .featured-deal { grid-template-columns: 1fr; }
+            .featured-deal-image { min-height: 240px; }
+            .offer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 767.98px) {
+            .offers-hero { padding: 110px 0 45px; }
+            .featured-deal-content { padding: 28px 22px; }
+            .offer-grid { grid-template-columns: 1fr; }
+            .countdown > div { padding: 8px 10px; min-width: 54px; }
+            .countdown strong { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+      <div class="brand-name">Car<span>Breezy</span></div>
+    </a>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNavbarMenu">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbarMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="new-cars.html">New Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="used-cars.html">Used Cars</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link active" href="offers.html">Offers</a></li>
+        <li class="nav-item"><a class="nav-link" href="inspection.html">Inspection</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+
+        <li class="nav-item ms-lg-2">
+          <div class="visitor-counter d-flex align-items-center gap-2">
+            <i class="bi bi-eye"></i>
+            <div>
+              <small>Visitors</small>
+              <strong id="visitorCount">1,024</strong>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- HERO -->
+<header class="offers-hero">
+  <div class="container position-relative">
+    <span class="section-label">CURRENT DEALS</span>
+
+    <h1>
+      Save more on your
+      <span>next car.</span>
+    </h1>
+
+    <p>
+      Limited-time offers on selected new and used vehicles.
+      Prices update weekly — grab them while they last.
+    </p>
+
+
+    <!-- FEATURED DEAL -->
+    <div class="featured-deal">
+
+      <div class="featured-deal-image">
+        <img src="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80"
+             alt="Featured offer">
+      </div>
+
+      <div class="featured-deal-content">
+        <span class="section-label">DEAL OF THE WEEK</span>
+
+        <h2>Toyota Corolla Altis X 1.6</h2>
+
+        <p>
+          Free first-year maintenance package, 0% markup on
+          financing, and a complimentary 120-point inspection.
+        </p>
+
+        <div class="featured-deal-prices">
+          <span class="featured-deal-old">PKR 67.94 Lac</span>
+          <span class="featured-deal-new">PKR 62.50 Lac</span>
+          <span class="featured-deal-save">SAVE 8%</span>
+        </div>
+
+        <div class="countdown" id="dealCountdown">
+          <div><strong id="cdDays">--</strong><span>Days</span></div>
+          <div><strong id="cdHours">--</strong><span>Hours</span></div>
+          <div><strong id="cdMins">--</strong><span>Mins</span></div>
+          <div><strong id="cdSecs">--</strong><span>Secs</span></div>
+        </div>
+
+        <a href="car-details.html?id=7" class="btn btn-primary align-self-start">
+          View Deal <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</header>
+
+
+<!-- ALL OFFERS -->
+<section class="section-padding">
+  <div class="container">
+
+    <div class="section-heading">
+      <div>
+        <span class="section-label">ALL OFFERS</span>
+        <h2>More ways to save</h2>
+        <p>Discounts across brands and body types.</p>
+      </div>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="category-buttons" id="offerFilters">
+      <button type="button" class="category-btn active" data-filter="all">All Offers</button>
+      <button type="button" class="category-btn" data-filter="new">New Cars</button>
+      <button type="button" class="category-btn" data-filter="used">Used Cars</button>
+      <button type="button" class="category-btn" data-filter="finance">Financing</button>
+      <button type="button" class="category-btn" data-filter="service">Service</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="offer-grid" id="offerGrid">
+
+      <div class="offer-tile" data-tags="new finance">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80" alt="Honda Civic offer">
+          <span class="offer-tile-badge">Save 5%</span>
+          <span class="offer-tile-tag">New</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Honda</small>
+          <h4>Honda Civic RS — Free Registration</h4>
+          <p>Book this month and we'll cover the full registration cost.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 1.01 Cr</span>
+            <span class="offer-tile-new">PKR 95.95 Lac</span>
+          </div>
+          <a href="car-details.html?id=13" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="new finance">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=800&q=80" alt="Kia Sportage offer">
+          <span class="offer-tile-badge">Save 6%</span>
+          <span class="offer-tile-tag">New</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Kia</small>
+          <h4>Kia Sportage — 0% Markup Financing</h4>
+          <p>Drive home with 12-month interest-free installment plan.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 1.05 Cr</span>
+            <span class="offer-tile-new">PKR 98.69 Lac</span>
+          </div>
+          <a href="car-details.html?id=21" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="used service">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" alt="Used car inspection offer">
+          <span class="offer-tile-badge">Free</span>
+          <span class="offer-tile-tag">Used</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Used Cars</small>
+          <h4>Free Inspection on Any Used Car</h4>
+          <p>Book a Standard inspection for free with any used car enquiry.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 12,000</span>
+            <span class="offer-tile-new">Free</span>
+          </div>
+          <a href="inspection.html" class="btn btn-outline-secondary w-100">
+            Book <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="new">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&w=800&q=80" alt="Hyundai offer">
+          <span class="offer-tile-badge">Save 4%</span>
+          <span class="offer-tile-tag">New</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Hyundai</small>
+          <h4>Hyundai Tucson — Free 3-Year Service</h4>
+          <p>Three years of scheduled maintenance covered at no extra cost.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 1.12 Cr</span>
+            <span class="offer-tile-new">PKR 1.07 Cr</span>
+          </div>
+          <a href="car-details.html?id=18" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="finance">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80" alt="MG offer">
+          <span class="offer-tile-badge">Save 5%</span>
+          <span class="offer-tile-tag">Finance</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>MG</small>
+          <h4>MG HS Trophy — Low Down Payment</h4>
+          <p>Only 20% down payment and flexible 36-month plan.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 83.99 Lac</span>
+            <span class="offer-tile-new">PKR 79.79 Lac</span>
+          </div>
+          <a href="car-details.html?id=26" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="service">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80" alt="Service offer">
+          <span class="offer-tile-badge">20% Off</span>
+          <span class="offer-tile-tag">Service</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>CarBreezy Service</small>
+          <h4>20% Off Premium Inspection</h4>
+          <p>Use code <strong>CB20</strong> when booking any Premium inspection.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 25,000</span>
+            <span class="offer-tile-new">PKR 20,000</span>
+          </div>
+          <a href="inspection.html" class="btn btn-outline-secondary w-100">
+            Book <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="used">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&w=800&q=80" alt="Used Honda offer">
+          <span class="offer-tile-badge">Save 7%</span>
+          <span class="offer-tile-tag">Used</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Honda</small>
+          <h4>Certified Pre-Owned Honda Accord</h4>
+          <p>Full service history and 6-month warranty included.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 1.25 Cr</span>
+            <span class="offer-tile-new">PKR 1.16 Cr</span>
+          </div>
+          <a href="car-details.html?id=16" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="new">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=800&q=80" alt="Toyota Fortuner offer">
+          <span class="offer-tile-badge">Save 3%</span>
+          <span class="offer-tile-tag">New</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Toyota</small>
+          <h4>Toyota Fortuner — Free Accessories Kit</h4>
+          <p>Floor mats, mud guards, and a full accessory package free.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 1.25 Cr</span>
+            <span class="offer-tile-new">PKR 1.22 Cr</span>
+          </div>
+          <a href="car-details.html?id=10" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="offer-tile" data-tags="used finance">
+        <div class="offer-tile-image">
+          <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=800&q=80" alt="Suzuki used offer">
+          <span class="offer-tile-badge">Save 6%</span>
+          <span class="offer-tile-tag">Used</span>
+        </div>
+        <div class="offer-tile-content">
+          <small>Suzuki</small>
+          <h4>Suzuki Cultus VXL — Exchange Bonus</h4>
+          <p>Trade in any car and get an additional PKR 200,000 off.</p>
+          <div class="offer-tile-prices">
+            <span class="offer-tile-old">PKR 27.90 Lac</span>
+            <span class="offer-tile-new">PKR 25.90 Lac</span>
+          </div>
+          <a href="car-details.html?id=11" class="btn btn-outline-secondary w-100">
+            View <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state d-none" id="offerEmpty">
+      <i class="bi bi-tag"></i>
+      <h4>No offers match this filter</h4>
+      <p>Try a different category or view all offers.</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- TERMS -->
+<section class="section-padding section-light">
+  <div class="container">
+
+    <div class="section-heading text-center mx-auto">
+      <div>
+        <span class="section-label">FINE PRINT</span>
+        <h2>Offer Terms</h2>
+        <p>Simple conditions so there are no surprises.</p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="value-icon"><i class="bi bi-clock-history"></i></div>
+          <h5>Limited Time</h5>
+          <p>All offers valid until the end of the current month unless stated otherwise.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="value-icon"><i class="bi bi-file-earmark-text"></i></div>
+          <h5>Cannot Be Combined</h5>
+          <p>Only one offer applies per vehicle purchase. Not combinable with others.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="value-card">
+          <div class="value-icon"><i class="bi bi-info-circle"></i></div>
+          <h5>Subject to Availability</h5>
+          <p>Stock of discounted vehicles is limited. Contact us to confirm availability.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <div>
+        <span class="section-label">MISSED A DEAL?</span>
+        <h2>Browse all cars for more options.</h2>
+        <p>New offers are added weekly across every brand.</p>
+      </div>
+      <a href="shop.html" class="btn btn-light">
+        Browse Shop <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+
+      <div class="col-lg-4">
+        <a href="index.html" class="footer-brand">
+          <div class="brand-logo"><i class="bi bi-car-front-fill"></i></div>
+          <span>Car<span>Breezy</span></span>
+        </a>
+
+        <p class="footer-description">
+          A simple automotive marketplace for discovering
+          new and used vehicles in Pakistan.
+        </p>
+
+        <div class="footer-socials">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Explore</h5>
+        <ul class="footer-links">
+          <li><a href="new-cars.html">New Cars</a></li>
+          <li><a href="used-cars.html">Used Cars</a></li>
+          <li><a href="shop.html">Shop</a></li>
+          <li><a href="offers.html">Offers</a></li>
+        </ul>
+      </div>
+
+      <div class="col-6 col-lg-2">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="inspection.html">Inspection</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-4">
+        <h5>Contact Information</h5>
+        <ul class="footer-contact">
+          <li><i class="bi bi-geo-alt"></i> Karachi, Pakistan</li>
+          <li><i class="bi bi-telephone"></i> +92 300 1234567</li>
+          <li><i class="bi bi-envelope"></i> info@carbreezy.com</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+      <p>© 2026 CarBreezy. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- LIVE TICKER -->
+<div class="live-ticker" id="liveTicker">
+  <div class="ticker-label">
+    <i class="bi bi-broadcast"></i>
+    <span>LIVE</span>
+  </div>
+
+  <div class="ticker-track">
+    <div class="ticker-content" id="tickerContent">
+      <span><i class="bi bi-calendar3"></i> <strong id="tickDate">Loading...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-clock"></i> <strong id="tickTime">--:--:--</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-geo-alt"></i> <strong id="tickLocation">Detecting...</strong></span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-tag"></i> New offers added this week</span>
+      <span class="ticker-separator">•</span>
+      <span><i class="bi bi-telephone"></i> Call <strong>+92 300 1234567</strong> for deal details</span>
+      <span class="ticker-separator">•</span>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/ticker.js"></script>
+<script src="js/visitor.js"></script>
+
+<script>
+/* =========================================================
+   OFFERS — filter pills + countdown
+   ========================================================= */
+
+/* ---------- Filter pills ---------- */
+const filterWrap = document.getElementById('offerFilters');
+const grid       = document.getElementById('offerGrid');
+const emptyBox   = document.getElementById('offerEmpty');
+
+filterWrap.addEventListener('click', e => {
+  const btn = e.target.closest('.category-btn');
+  if (!btn) return;
+
+  filterWrap.querySelectorAll('.category-btn')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const filter = btn.dataset.filter;
+  let visible = 0;
+
+  grid.querySelectorAll('.offer-tile').forEach(tile => {
+    const tags = tile.dataset.tags.split(' ');
+    const show = filter === 'all' || tags.includes(filter);
+
+    tile.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  emptyBox.classList.toggle('d-none', visible > 0);
+});
+
+
+/* ---------- Countdown timer ---------- */
+(function dealCountdown() {
+  const daysEl  = document.getElementById('cdDays');
+  const hoursEl = document.getElementById('cdHours');
+  const minsEl  = document.getElementById('cdMins');
+  const secsEl  = document.getElementById('cdSecs');
+
+  if (!daysEl) return;
+
+  /* End of the current week (next Sunday 23:59:59) */
+  const end = new Date();
+  end.setDate(end.getDate() + (7 - end.getDay()));
+  end.setHours(23, 59, 59, 999);
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const diff = Math.max(0, end - new Date());
+
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff % 86400000 / 3600000);
+    const m = Math.floor(diff % 3600000  / 60000);
+    const s = Math.floor(diff % 60000    / 1000);
+
+    daysEl.textContent  = pad(d);
+    hoursEl.textContent = pad(h);
+    minsEl.textContent  = pad(m);
+    secsEl.textContent  = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
